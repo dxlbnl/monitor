@@ -1,0 +1,94 @@
+<i ref:icon></i>
+
+<script>
+  import fontawesome from '@fortawesome/fontawesome'
+
+  import freeSolid from '@fortawesome/fontawesome-free-solid'
+  import freeRegular from '@fortawesome/fontawesome-free-regular'
+  import freeBrands from '@fortawesome/fontawesome-free-brands'
+  import proSolid from '@fortawesome/fontawesome-pro-solid'
+  import proRegular from '@fortawesome/fontawesome-pro-regular'
+  import proLight from '@fortawesome/fontawesome-pro-light'
+
+  fontawesome.noAuto()
+
+  fontawesome.library.add(
+    freeSolid,
+    freeRegular,
+    freeBrands,
+    proSolid,
+    proRegular,
+    proLight
+  )
+
+  function normalizeIconArgs (icon) {
+  }
+
+  import _ from 'lodash'
+  export default {
+    data () {
+      return {
+        icon: 'user',
+        classes: null,
+        transform: null,
+        mask: null,
+        symbol: null
+      }
+    },
+    onstate ({ changed, current }) {
+      if (changed.renderedIcon) {
+        const icon = this.refs.icon
+        while (icon.childNodes.length) {
+          icon.removeChild(icon.childNodes[0])
+        }
+        for (let node of current.renderedIcon) {
+          icon.appendChild(node)
+        }
+      }
+    },
+    computed: {
+      normalizedIcon: ({ icon, normalizedSet }) => {
+        if (icon === null) {
+          return null
+        }
+
+        if (typeof icon === 'object' && icon.prefix && icon.iconName) {
+          return icon
+        }
+
+        if (Array.isArray(icon) && icon.length === 2) {
+          return { prefix: icon[0], iconName: icon[1] }
+        }
+
+        if (typeof icon === 'string') {
+          return { prefix: normalizedSet, iconName: icon }
+        }
+      },
+      normalizedSet: ({ set }) => {
+        switch (set) {
+          case 'regular':
+            return 'far'
+          case 'light':
+            return 'fal'
+          case 'brands':
+            return 'fab'
+          case 'solid':
+          default:
+            return 'fas'
+        }
+      },
+      renderedIcon: ({ normalizedIcon: icon, classes, transform, mask, symbol }) => {
+        const renderedIcon = fontawesome.icon(icon, {
+          ...classes,
+          ...transform,
+          ...mask,
+          symbol
+        })
+
+        if (!renderedIcon) return null
+
+        return renderedIcon.node
+      }
+    }
+  }
+</script>

@@ -1,0 +1,121 @@
+<svelte:head>
+	<title>Sapper & AIOHttp & GraphQL project template</title>
+</svelte:head>
+
+<section>
+	<h2>Hi.</h2>
+	<pre>{JSON.stringify(user, null, 2)}</pre>
+</section>
+
+<h1>Next things for the app template</h1>
+
+<ul>
+	<li>Sapper loading of api state.</li>
+	<li>Login and emailing</li>
+	<li>Queueing setup</li>
+	<li>GraphQL data in a local store</li>
+	<li>- Resolving only fields lazily by observable properties. (aka proxy)</li>
+</ul>
+
+<figure>
+	<img alt='Borat' src='great-success.png'>
+	<figcaption>HIGH FIVE!</figcaption>
+</figure>
+
+<p><strong>Try editing this file (routes/index.html) to test hot module reloading.</strong></p>
+
+<style>
+
+	section {
+		max-width: 100%;
+
+		& pre {
+			white-space: pre-wrap;
+		}
+	}
+
+	h1, figure, p {
+		text-align: center;
+		margin: 0 auto;
+	}
+
+	h1 {
+		font-size: 2.8em;
+		text-transform: uppercase;
+		font-weight: 700;
+		margin: 0 0 0.5em 0;
+	}
+
+	figure {
+		margin: 0 0 1em 0;
+	}
+
+	img {
+		width: 100%;
+		max-width: 400px;
+		margin: 0 0 1em 0;
+	}
+
+	p {
+		margin: 1em auto;
+	}
+
+	@media (min-width: 480px) {
+		h1 {
+			font-size: 4em;
+		}
+	}
+</style>
+
+<script>
+  import { goto } from 'sapper/runtime.js'
+
+  import gql from 'graphql-tag';
+  import { graphql, query, connect, disconnect } from 'svelte-apollo'; 
+
+  export default {
+  	methods: {
+  		async getQuery() {
+	      const { graphql } = this.store.get()
+  			console.log("Getting query:", graphql)
+
+	      try {
+	        
+	        this.set({
+	        	user
+	        })
+	      } catch (e) {
+	        console.log("Error:", e)
+	        goto('login')
+	      }
+  		}
+  	},
+    helpers: {
+    	JSON
+    },
+    oncreate () {
+	  	// Connect to the query
+	  	// Subscribe to changes... 
+    	// this.getQuery()
+    },
+    ondestroy () {
+	    // Ondestroy, unsubscribe
+	    // disconnect(this)
+    },
+    async preload () {
+			// Setup queries, and wait for them to complete once.
+
+			try {
+        const user = await this.store.getUser()
+        console.log("Resolved user:", user)
+	  		return {
+	  			user
+	  		}
+			} catch (e) {
+				console.error("Error happend in preload:", e)
+				this.redirect(302, 'login')
+			}
+    }
+  }
+
+</script>

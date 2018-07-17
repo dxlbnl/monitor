@@ -1,0 +1,271 @@
+<table>
+  {#if headers}
+  <thead>
+    <tr>
+      {#if select}
+        <th class='select' on:click='toggleAll()'>
+          <Icon
+            icon='{
+              selected.size > 0
+               ? (data.length > selected.size
+                 ? 'minus-square'
+                 : 'check-square'
+               )
+               : 'square'
+            }'
+            set='regular'
+          />
+        </th>
+      {/if}
+      {#each headers as header}
+        {#if sort}
+          <th on:click='setSort(header)'>
+            <span>{header}</span>
+            {#if sortOrder.column === header }
+              <span class='order'>
+                {#if sortOrder.direction }
+                  <Icon icon='caret-down' />
+                {:else}
+                  <Icon icon='caret-up' />
+                {/if}
+              </span>
+            {/if}
+          </th>
+        {:else}
+          <th>{header}</th>
+        {/if}
+      {/each}
+    </tr>
+  </thead>
+  {/if}
+  <tbody>
+    {#each sortedData as item (item.id)}
+    <tr on:click='set({opened: (opened === item.id) ? null : item.id})'>
+      {#if select}
+      <td class='select' on:click='toggleItem(event, item.id)'>
+        <Icon
+          icon='{
+            selected.has(item.id)
+             ? 'check-square'
+             : 'square'
+          }'
+          set='light'
+        />
+      </td>
+      {/if}
+      {#each columns as [name, getter]}
+        <td>{getter(item)}</td>
+      {/each}
+    </tr>
+    {#if expandComponent && opened === item.id}
+    <tr>
+        <td class='expanded' colspan='{columns.length + 1}'>
+          <svelte:component this="{expandComponent}" itemId={item.id} />
+        </td>
+    </tr>
+    {/if}
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  :root {
+    /*--main-color: #9ae495;*/
+    --main-color: pink;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    background: white;
+    overflow: hidden;
+    user-select: none;
+
+    & thead tr {
+      background: var(--main-color);
+
+      & th:hover {
+        cursor: pointer;
+        background: color(var(--main-color) saturation(+20%));
+      }
+    }
+    & tbody tr {
+      background: color(var(--main-color) lightness(+40%));
+      cursor: pointer;
+
+      &:nth-child(odd) {
+        background: color(var(--main-color) lightness(+20%));
+      }
+      &:hover {
+        background: color(var(--main-color));
+      }
+    }
+    & td, & th {
+      position: relative;
+      &:hover::after {
+        background-color: color(var(--main-color) alpha(50%));
+        pointer-events: none;
+        content: '\00a0';
+        position: absolute;
+        width: 100%; height: 10000px;
+        top: -5000px;
+        left: 0;
+        z-index: -1;
+      }
+
+      &.select {
+        justify-content: center;
+        display: flex;
+      }
+    }
+    & td.expanded {
+      background: white;
+
+      &:hover::after {
+        content: none;
+      }
+    }
+    & th {
+      position: relative;
+      & .order {
+        position: absolute;
+        right: 0.3rem;
+      }
+    }
+  }
+</style>
+
+<script>
+  function sortStrings(getter, direction) {
+    return function sort(a, b) {
+      const [aVal, bVal] = [getter(a).toLowerCase(), getter(b).toLowerCase()]
+      if (aVal < bVal) {
+        return direction ? -1 : 1
+      }
+      if (aVal > bVal) {
+        return direction ? 1 : -1
+      }
+      return 0
+    }
+  }
+  function sortDefault(getter, direction) {
+    return function sort(a, b) {
+      const [aVal, bVal] = [getter(a), getter(b)]
+      if (aVal < bVal) {
+        return direction ? -1 : 1
+      }
+      if (aVal > bVal) {
+        return direction ? 1 : -1
+      }
+      return 0
+    }
+  }
+  export default {
+    components: {
+      Icon: './Icon.html'
+    },
+    computed: {
+      headers: ({ columns }) => columns.map(([name, ]) => name),
+      sortOrder: ({ sortColumn }) => {
+        if (sortColumn) {
+          const [, dir, column] = sortColumn.match(/^(-?)\s*(\w+)$/)
+          const direction = dir === ''
+          return { direction, column }
+        }
+        return { direction: true, column: null}
+      },
+      sortedData: ({ sort, sortOrder, data = [], columns }) => {
+        console.log("Data:", data)
+        if (sort && sortOrder.column) {
+          const { direction, column } = sortOrder
+          // resolve a value to know how to sort.
+          const [{ [column]: sample } = {}, ] = data.filter(o => column in o)
+          const [[, getter], ] = columns.filter(([name, ]) => name === column)
+          
+          const sortFn = (
+            (typeof sample === 'string')
+            ? sortStrings
+            : (sample instanceof Array)
+              ? sortStrings // Uses getter to make strings :)
+              : sortDefault
+          )(getter, direction)
+
+          const d = [...data].sort(sortFn)
+          console.log("sortedData:", d)
+
+          return d
+        } else {
+          console.log("--sortedData:", data)
+          return data
+        }
+      },
+    },
+    data () {
+      return {
+        data: [],
+        columns: [],
+        select: true,
+        selected: new Set(),
+        sort: true,
+        sortColumn: null,
+        opened: null
+      }
+    },
+    methods: {
+      toggleItem (event, id) {
+        event.stopPropagation()
+
+        const { selected } = this.get()
+        if (selected.has(id)) {
+          selected.delete(id)
+        } else {
+          selected.add(id)
+        }
+        this.set({ selected })
+      },
+      toggleAll () {
+        const { selected, data } = this.get()
+
+        if (selected.size) {
+          // Deselect all
+          this.set({
+            selected: new Set()
+          })
+        } else {
+          // Select all
+          this.set({
+            selected: new Set(data.map(({ id }) => id))
+          })
+        }
+      },
+      setSort (column) {
+        const { sortColumn } = this.get()
+        let newSort
+
+        if (sortColumn) {
+          const [, direction, currentColumn] = sortColumn.match(/^(-?)\s*(\w+)$/)
+
+          if (currentColumn === column) {
+            // Change direction
+            if (direction === '-') {
+              // Remove the sort after this
+              newSort = null
+            } else {
+              newSort = `-${column}`
+            }
+          } else {
+            // Set sort to column
+            newSort = column
+          }
+        } else {
+          newSort = column
+        }
+      
+        this.set({
+          sortColumn: newSort
+        })
+      }
+    }
+  }
+</script>

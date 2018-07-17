@@ -1,0 +1,51 @@
+<Nav user={$user} page={
+	props.path === '/' ? 'home' :
+	props.path === '/about' ? 'about' :
+	props.path.startsWith('/blog') ? 'blog' :
+	null
+}/>
+	<!-- 
+	<p>state</p>
+	<pre>{JSON.stringify(props, null, 2)}</pre>
+	 -->
+
+	<main>
+		<svelte:component this={Page} {...props}/>
+	</main>
+
+<style>
+	main {
+		position: relative;
+		max-width: 56em;
+		background-color: white;
+		padding: 2em;
+		margin: 0 auto;
+		box-sizing: border-box;
+	}
+
+/*	pre {
+		max-height: 30vh;
+		overflow: auto;
+		font-size: 0.6rem;
+		line-height: 0.6rem;
+	}*/
+</style>
+
+<script>
+	import Nav from '../components/Nav.html';
+  import { goto } from 'sapper/runtime.js'
+
+  import gql from 'graphql-tag';
+  import { graphql, query, connect, disconnect } from 'svelte-apollo'; 
+
+	export default {
+		components: {
+			Nav
+		},
+    // oncreate: connect,
+    // ondestroy: disconnect,
+		helpers: {
+			JSON
+		}
+	};
+</script>

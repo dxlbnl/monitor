@@ -1,0 +1,39 @@
+version: '3.6'
+services:
+  postgres:
+    # image: postgres
+    image: timescale/timescaledb:latest-pg10
+    environment:
+    - "POSTGRES_PASSWORD:mysecretpassword"
+    restart: always
+    volumes:
+    - db_data:/var/lib/postgresql/data
+  graphql-engine:
+    container_name: graphql
+    image: hasura/graphql-engine:v1.0.0-alpha07
+    ports:
+    - "80"
+    depends_on:
+    - "postgres"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    command: >
+      /bin/sh -c "
+      graphql-engine \
+        --host postgres \
+        --port 5432 \
+        --user postgres \
+        --password $${POSTGRES_PASSWORD} \
+        --dbname monitor \
+        serve \
+        --server-port 80 \
+        --enable-console;
+      "
+volumes:
+  db_data:
+
+networks:
+  default:
+    external:
+      name: monitor
