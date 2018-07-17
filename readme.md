@@ -1,7 +1,7 @@
 # Plain and simple monitoring "stack".
 
-- Driven by PostgresDB
-- In cooperation with TimeseriesDB
+- Driven by [PostgreSQL]
+- In cooperation with TimescaleDB
 - Supported by hasura
 - Produced by Dexter
 
@@ -12,8 +12,9 @@
 ## Services
 
 - Dashboard & Admin panel (frontend)
+  - 
 - graphql-engine  (powered by hasura)
-- PostgresDB with TimeseriesDB extension enabled
+- PostgreSQL with TimescaleDB extension enabled
 - Controllers
   - a docker image, registering itself.
   - able to handle a variety of tasks.
@@ -38,3 +39,7 @@ It could dispatch a curl command to fetch a health status endpoint
 - [ ] mtr
 - [ ] ctl met filter op geissuede certs
 - [ ] mail blacklist checking
+
+
+[PostgreSQL]: https://www.postgresql.org/
+[TimescaleDB]: https://github.com/timescale/timescaledb/
