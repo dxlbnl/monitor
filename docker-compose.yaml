@@ -30,8 +30,8 @@ services:
         --enable-console;
       "
 
-  cron-controller:
-    build: ./controllers/cron
+  status-monitor:
+    build: ./controllers/status-monitor
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       POSTGRES_DB: $POSTGRES_DB
