@@ -1,8 +1,8 @@
 # Plain and simple monitoring "stack".
 
 - Driven by [PostgreSQL]
-- In cooperation with TimescaleDB
-- Supported by hasura
+- In cooperation with [TimescaleDB]
+- Supported by [hasura]
 - Produced by Dexter
 
 ## Todo
@@ -13,8 +13,8 @@
 
 - Dashboard & Admin panel (frontend)
   - 
-- graphql-engine  (powered by hasura)
-- PostgreSQL with TimescaleDB extension enabled
+- graphql-engine  (powered by [hasura])
+- [PostgreSQL] with [TimescaleDB] extension enabled
 - Controllers
   - a docker image, registering itself.
   - able to handle a variety of tasks.
@@ -43,3 +43,4 @@ It could dispatch a curl command to fetch a health status endpoint
 
 [PostgreSQL]: https://www.postgresql.org/
 [TimescaleDB]: https://github.com/timescale/timescaledb/
+[hasura]: https://hasura.io/
