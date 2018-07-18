@@ -4,43 +4,40 @@ import sapper from 'sapper'
 import serve from 'serve-static'
 import { routes } from './manifest/server.js'
 // import { getGql } from '../lib/graphql.js'
-import fetch from 'node-fetch'
+
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { createHttpLink } from 'apollo-link-http'
+import { createProvider } from 'svelte-apollo'
+import ApolloClient from 'apollo-boost'
 
 import App from './App.html'
-import { Store } from './store.js'
+import { Store } from 'svelte/store.js'
 
-async function authenticate (req, res, next) {
-  const {
-    cookie
-  } = req.headers
-
-  if (cookie) {
-    const [name, token] = cookie.split('=')
-
-    if (name === 'token') {
-      req.user = {
-        token
-      }
-    }
-  }
-  console.log(`${req.method}: ${req.url}`)
-  next() // done, woot!
-}
+import fetch from 'node-fetch'
+global.fetch = fetch
 
 polka() // You can also use Express
-  .use(authenticate)
   .use(
     compression({ threshold: 0 }),
     serve('assets'),
     sapper({
       routes,
       App,
-      store: request => {
-        return new Store({
-          api: 'http://api/graphql',
-          fetch,
-          token: request.user && request.user.token
+      store: req => {
+        const client = new ApolloClient({
+          ssrMode: true,
+          link: createHttpLink({
+            uri: 'http://monitor-graphql-1.monitor.dock/graphql',
+            credentials: 'same-origin',
+            headers: {
+              cookie: req.headers.Cookie
+            }
+          }),
+          cache: new InMemoryCache()
         })
+        const graphql = createProvider(client, { ssr: true })
+
+        return new Store({ graphql })
       }
     })
   )
