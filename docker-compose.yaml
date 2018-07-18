@@ -4,32 +4,39 @@ services:
     # image: postgres
     image: timescale/timescaledb:latest-pg10
     environment:
-    - "POSTGRES_PASSWORD:mysecretpassword"
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
     restart: always
     volumes:
     - db_data:/var/lib/postgresql/data
-  graphql-engine:
-    container_name: graphql
+
+  graphql:
     image: hasura/graphql-engine:v1.0.0-alpha07
     ports:
     - "80"
     depends_on:
     - "postgres"
     restart: always
-    environment:
-      - POSTGRES_PASSWORD=mysecretpassword
     command: >
       /bin/sh -c "
       graphql-engine \
         --host postgres \
         --port 5432 \
-        --user postgres \
-        --password $${POSTGRES_PASSWORD} \
-        --dbname monitor \
+        --user $POSTGRES_USER \
+        --password $POSTGRES_PASSWORD \
+        --dbname $POSTGRES_DB \
         serve \
         --server-port 80 \
         --enable-console;
       "
+
+  cron-controller:
+    build: ./controllers/cron
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+
 volumes:
   db_data:
 

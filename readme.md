@@ -9,6 +9,28 @@
 
 - Everything
 
+### DB setup
+
+```sql
+\c monitor
+CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
+
+-- We start by creating a regular SQL table
+
+CREATE TABLE conditions (
+  time        TIMESTAMPTZ       NOT NULL,
+  location    TEXT              NOT NULL,
+  temperature DOUBLE PRECISION  NULL,
+  humidity    DOUBLE PRECISION  NULL
+);
+
+-- This creates a hypertable that is partitioned by time
+--   using the values in the `time` column.
+
+SELECT create_hypertable('conditions', 'time');
+
+```
+
 ## Services
 
 - Dashboard & Admin panel (frontend)
