@@ -1,0 +1,93 @@
+<svelte:head>
+	<title>Sapper & AIOHttp & GraphQL project template</title>
+</svelte:head>
+
+<section>
+	<span on:click='refetch(endpoints)'>
+    <h1 style='display:inline'><Icon icon='sync'/></h1>
+    (automatic fetch in {timeToFetch}s) [{time}]
+  </span>
+  {#await endpoints}
+    Loading...
+  {:then result}
+    <ul>
+      {#each result.data.status_monitor_config as endpoint}
+        <li>
+          {endpoint.name}
+          <ul>
+            {#each endpoint.values as value}
+              <li>{value.time}: {value.status_code}</li>
+            {/each}
+          </ul>
+        </li>
+      {:else}
+        <li>No endpoints</li>
+      {/each}
+    </ul>
+  {:catch error}
+    Error: {error}
+  {/await}
+</section>
+
+<script>
+  import { query, connect, refetch } from 'svelte-apollo'
+  import gql from 'graphql-tag'
+  import moment from 'moment'
+
+  const GET_MONITORED_ENDPOINTS = gql` {
+    status_monitor_config {
+      name
+      values(limit:10, order_by:time_desc) {
+        time status_code
+      }
+    }
+  }`
+
+  export default {
+    components: {
+      Icon: '../components/Icon.html'
+    },
+    computed: {
+      timeToFetch: ({ time = moment() }) =>
+        moment(time).subtract(4, 'seconds')
+          .startOf('minute').add(1, 'minute').add(4, 'seconds')
+          .diff(time, 'seconds')
+    },
+    data() {
+      return {
+        endpoints: query(GET_MONITORED_ENDPOINTS),
+      }
+    },
+    methods: {
+      refetch
+    },
+    helpers: {
+      formatDate (date) {
+        return moment(date).fromNow()
+      }
+    },
+    onstate: connect,
+    oncreate () {
+      this.timer = window.setInterval(() => {
+        this.set({
+          time: moment()
+        })
+      })
+      this.on('state', ({ changed, current, previous }) => {
+        if (changed.timeToFetch) {
+          if (current.timeToFetch === 0) {
+            const { endpoints } = this.get()
+            console.log("Refetching")
+            this.refetch(endpoints)
+          }
+        }
+      });
+    },
+    ondestroy () {
+      window.clearInterval(this.timer)
+      console.log("Destroying")
+    }
+  }
+  
+</script>
+

@@ -27,7 +27,7 @@ polka() // You can also use Express
         const client = new ApolloClient({
           ssrMode: true,
           link: createHttpLink({
-            uri: 'http://monitor-graphql-1.monitor.dock/graphql',
+            uri: 'http://monitor-graphql-1.monitor.dock/v1alpha1/graphql',
             credentials: 'same-origin',
             headers: {
               cookie: req.headers.Cookie

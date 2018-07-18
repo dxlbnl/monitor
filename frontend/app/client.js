@@ -11,7 +11,7 @@ init({
   routes,
   App,
   store: data => {
-    const client = new ApolloClient({ uri: 'http://monitor-graphql-1.monitor.dock/graphql' })
+    const client = new ApolloClient({ uri: 'http://monitor-graphql-1.monitor.dock/v1alpha1/graphql' })
 
     return new Store({
       ...data,
