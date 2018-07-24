@@ -1,0 +1,120 @@
+<svelte:head>
+	<title>Traceroute</title>
+</svelte:head>
+
+{#await endpoints}
+  Loading...
+{:then result}
+  <section>
+    <h2>Now: {formatDateTime(time)}</h2>
+
+    <Table
+      sort
+      bind:opened
+      data='{result.data.mtr_config}'
+      columns='{[
+        ['name', ({ name }) => name],
+        ['host', ({ host }) => host],
+        ['cycles', ({ cycles }) => cycles],
+        ['interval', ({ interval }) => interval],
+        ['best', ({ traces: [last, ...rest] }) => last && last.dest_best],
+        ['avg', ({ traces: [last, ...rest] }) => last && last.dest_avg],
+        ['worst', ({ traces: [last, ...rest] }) => last && last.dest_worst],
+        ['loss', ({ traces: [last, ...rest] }) => last && last.dest_loss],
+        ['last', ({ traces: [last, ...rest] }) => last && lastUpdate(last.time)],
+        ['graph', {
+          component: TraceGraph,
+          getState: ({ traces }) => ({ traces })
+        }],
+      ]}'
+      expandComponent='{TraceList}'
+    />
+  </section>
+{:catch error}
+  Error: {error}
+{/await}
+
+
+<style>
+  :global(table td > svg) {
+    height: 3rem;
+  }
+</style>
+
+<script>
+  import { subscription, mutation, connect, refetch } from 'svelte-apollo'
+  import gql from 'graphql-tag'
+  import moment from 'moment'
+
+  import TraceGraph from '../components/TraceGraph.svg'
+  import TraceList from '../components/TraceList.html'
+
+  moment.locale('en', {
+    relativeTime : {
+      s : (number, withoutSuffix, key, isFuture) => `${number} seconds`
+    }
+  })
+
+  function timeElapsed (then, now) {
+    if (Math.abs(now.diff(then)) < 1000) { // 1000 milliseconds
+        return 'just now';
+    }
+    return then.from(now)
+  }
+
+  const GET_TRACEROUTES = gql`
+    subscription {
+      mtr_config {
+        id
+        name
+        host
+        cycles
+        interval
+        traces(limit:10, order_by:time_desc) {
+          time
+          dest_best
+          dest_avg
+          dest_loss
+          dest_worst,
+          hubs
+        }
+      }
+    }
+  `
+
+  export default {
+    components: {
+      Table: '../components/Table.html',
+    },
+    computed: {
+      lastUpdate: ({ time }) => (update) => timeElapsed(moment(update), time)
+    },
+    data() {
+      return {
+        endpoints: subscription(GET_TRACEROUTES),
+        time: moment(),
+        TraceGraph, TraceList
+      }
+    },
+    helpers: {
+      formatDateTime(date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      }
+    },
+    onstate: connect,
+    oncreate () {
+      console.log("Setting timer")
+      this.timer = window.setInterval(() => {
+        this.set({
+          time: moment()
+        })
+      }, 1000)
+    },
+    ondestroy () {
+      window.clearInterval(this.timer)
+      console.log("Destroying")
+    }
+  }
+  
+</script>
+

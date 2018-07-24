@@ -1,0 +1,40 @@
+<section>
+  <section class='traces'>
+    <h4>Traces</h4>
+    <Table
+      data='{item.traces}'
+      idField='time'
+      bind:opened
+      columns='{[
+        ['time', ({ time }) => formatDateTime(time)],
+        ['best', ({ dest_best }) => dest_best],
+        ['avg', ({ dest_avg }) => dest_avg],
+        ['worst', ({ dest_worst }) => dest_worst],
+        ['loss', ({ dest_loss }) => dest_loss],
+      ]}'
+      expandComponent='{TraceView}'
+    />
+  </section>
+</section>
+
+<script>
+  import moment from 'moment'
+  import TraceView from './TraceView.html'
+
+  export default {
+    components: {
+      Table: './Table.html'
+    },
+    data () {
+      return {
+        item: {},
+        TraceView
+      }
+    },
+    helpers: {
+      formatDateTime(date) {
+        return moment(date).format('HH:mm:ss')
+      }
+    },
+  }
+</script>

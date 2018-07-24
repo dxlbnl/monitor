@@ -1,0 +1,4 @@
+asyncio>=3.4.3
+aiopg>=0.14.0
+PyYAML>=3.12
+python-dotenv>=0.8.2

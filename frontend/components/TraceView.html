@@ -1,0 +1,35 @@
+<section>
+  <section class='hubs'>
+    <h4>Hubs</h4>
+    <Table
+      data='{item.hubs}'
+      idField='count'
+      columns='{[
+        ['count', ({ count }) => count],
+        ['host', ({ host }) => host],
+        ['loss', ({ "Loss%": loss }) => loss],
+        ['Snt', ({ Snt }) => Snt],
+        ['Last', ({ Last }) => Last],
+        ['Avg', ({ Avg }) => Avg],
+        ['Best', ({ Best }) => Best],
+        ['Wrst', ({ Wrst }) => Wrst],
+        ['StDev', ({ StDev }) => StDev],
+      ]}'
+    />
+  </section>
+</section>
+
+<script>
+  import moment from 'moment'
+
+  export default {
+    components: {
+      Table: './Table.html'
+    },
+    data () {
+      return {
+        item: {}
+      }
+    },
+  }
+</script>

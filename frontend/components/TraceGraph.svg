@@ -1,0 +1,44 @@
+<svg viewBox="0 0 {width} {height}" :width :height preserveAspectRatio='none'>
+
+  <g transform='scale(1, -1) translate(0, -{height})'>
+  {#each traces as trace, i}
+    <g class='trace'>
+      <rect width="5" height="{traceHeight(trace.dest_worst)}" x={width-(i*5)} fill=red></rect>
+      <rect width="5" height="{traceHeight(trace.dest_avg)}" x={width-(i*5)} fill=yellow></rect>
+      <rect width="5" height="{traceHeight(trace.dest_best)}" x={width-(i*5)} fill=green></rect>
+    </g>
+  {/each}
+  </g>
+</svg>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+
+<script>
+  export default {
+    data() {
+      return {
+        traces: [],
+        height: 10,
+      }
+    },
+    computed: {
+      width: ({ traces }) => traces.length * 5,
+      worst: ({ traces }) => {
+        let worst = 0
+        for (let trace of traces) {
+          if (trace.dest_worst > worst) {
+            worst = trace.dest_worst
+          }
+        }
+        return worst
+      },
+      traceHeight: ({ worst, height }) => (val) => (val / worst) * height
+    }
+  }
+</script>

@@ -39,13 +39,13 @@
   </thead>
   {/if}
   <tbody>
-    {#each sortedData as item (item.id)}
-    <tr on:click='set({opened: (opened === item.id) ? null : item.id})'>
+    {#each sortedData as item (item[idField])}
+    <tr on:click='set({opened: (opened === item[idField]) ? null : item[idField]})'>
       {#if select}
-      <td class='select' on:click='toggleItem(event, item.id)'>
+      <td class='select' on:click='toggleItem(event, item[idField])'>
         <Icon
           icon='{
-            selected.has(item.id)
+            selected.has(item[idField])
              ? 'check-square'
              : 'square'
           }'
@@ -54,13 +54,19 @@
       </td>
       {/if}
       {#each columns as [name, getter]}
-        <td>{getter(item)}</td>
+        {#if typeof getter === 'function'}
+          <td>{getter(item)}</td>
+        {:else}
+          <td>
+            <svelte:component this={getter.component} {...getter.getState(item)} />
+          </td>
+        {/if}
       {/each}
     </tr>
-    {#if expandComponent && opened === item.id}
+    {#if expandComponent && opened === item[idField]}
     <tr>
         <td class='expanded' colspan='{columns.length + 1}'>
-          <svelte:component this="{expandComponent}" itemId={item.id} />
+          <svelte:component this="{expandComponent}" item='{item}' itemId='{item[idField]}' />
         </td>
     </tr>
     {/if}
@@ -176,7 +182,6 @@
         return { direction: true, column: null}
       },
       sortedData: ({ sort, sortOrder, data = [], columns }) => {
-        console.log("Data:", data)
         if (sort && sortOrder.column) {
           const { direction, column } = sortOrder
           // resolve a value to know how to sort.
@@ -192,11 +197,9 @@
           )(getter, direction)
 
           const d = [...data].sort(sortFn)
-          console.log("sortedData:", d)
 
           return d
         } else {
-          console.log("--sortedData:", data)
           return data
         }
       },
@@ -205,11 +208,12 @@
       return {
         data: [],
         columns: [],
-        select: true,
+        select: false,
         selected: new Set(),
-        sort: true,
+        sort: false,
         sortColumn: null,
-        opened: null
+        opened: null,
+        idField: 'id'
       }
     },
     methods: {
@@ -234,8 +238,9 @@
           })
         } else {
           // Select all
+          const { idField } = this.get()
           this.set({
-            selected: new Set(data.map(({ id }) => id))
+            selected: new Set(data.map(item => item[idField]))
           })
         }
       },

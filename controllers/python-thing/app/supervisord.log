@@ -1,0 +1,119 @@
+2018-07-21 13:27:30,809 INFO supervisord started with pid 1
+2018-07-21 13:27:31,813 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:27:32,180 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:27:33,184 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:27:33,453 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:27:35,459 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:27:35,732 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:27:38,739 INFO spawned: 'queue_1' with pid 12
+2018-07-21 13:27:39,007 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:27:40,008 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:28:08,567 WARN received SIGTERM indicating exit request
+2018-07-21 13:28:10,221 INFO supervisord started with pid 1
+2018-07-21 13:28:11,225 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:28:11,516 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:12,520 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:28:12,798 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:14,802 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:28:15,065 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:18,071 INFO spawned: 'queue_1' with pid 12
+2018-07-21 13:28:18,358 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:19,359 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:28:46,615 WARN received SIGTERM indicating exit request
+2018-07-21 13:28:48,109 INFO supervisord started with pid 1
+2018-07-21 13:28:49,114 INFO spawned: 'queue_1' with pid 8
+2018-07-21 13:28:49,407 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:50,411 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:28:50,688 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:52,697 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:28:52,976 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:55,980 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:28:56,212 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:28:57,214 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:29:01,732 WARN received SIGTERM indicating exit request
+2018-07-21 13:29:03,342 INFO supervisord started with pid 1
+2018-07-21 13:29:04,345 INFO spawned: 'queue_1' with pid 8
+2018-07-21 13:29:04,635 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:29:05,640 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:29:05,931 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:29:07,937 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:29:08,224 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:29:11,229 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:29:11,533 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:29:12,535 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:29:14,616 WARN received SIGTERM indicating exit request
+2018-07-21 13:29:16,153 INFO supervisord started with pid 1
+2018-07-21 13:29:17,157 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:29:17,442 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:29:18,447 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:29:18,729 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:29:20,734 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:29:21,000 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:29:24,007 INFO spawned: 'queue_1' with pid 12
+2018-07-21 13:29:24,292 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:29:25,293 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:40:42,905 WARN received SIGTERM indicating exit request
+2018-07-21 13:40:44,624 INFO supervisord started with pid 1
+2018-07-21 13:40:45,627 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:40:45,930 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:40:46,935 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:40:47,223 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:40:49,228 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:40:49,512 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:40:52,519 INFO spawned: 'queue_1' with pid 12
+2018-07-21 13:40:52,862 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:40:53,863 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:42:47,156 WARN received SIGTERM indicating exit request
+2018-07-21 13:42:48,945 INFO supervisord started with pid 1
+2018-07-21 13:42:49,948 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:42:50,192 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:42:51,197 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:42:51,498 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:42:53,503 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:42:53,845 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:42:56,851 INFO spawned: 'queue_1' with pid 12
+2018-07-21 13:42:57,073 INFO exited: queue_1 (exit status 1; not expected)
+2018-07-21 13:42:58,074 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 13:43:17,206 WARN received SIGTERM indicating exit request
+2018-07-21 13:43:18,783 INFO supervisord started with pid 1
+2018-07-21 13:43:19,786 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:43:20,069 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:21,073 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:43:21,351 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:21,897 WARN received SIGTERM indicating exit request
+2018-07-21 13:43:23,498 INFO supervisord started with pid 1
+2018-07-21 13:43:24,502 INFO spawned: 'queue_1' with pid 8
+2018-07-21 13:43:24,794 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:25,798 INFO spawned: 'queue_1' with pid 9
+2018-07-21 13:43:26,100 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:28,103 INFO spawned: 'queue_1' with pid 10
+2018-07-21 13:43:28,321 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:31,327 INFO spawned: 'queue_1' with pid 11
+2018-07-21 13:43:31,648 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 13:43:32,649 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-21 16:22:27,861 WARN received SIGTERM indicating exit request
+2018-07-21 16:22:31,451 INFO supervisord started with pid 1
+2018-07-21 16:22:32,457 INFO spawned: 'queue_1' with pid 10
+2018-07-21 16:22:32,788 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-21 16:22:33,012 WARN received SIGTERM indicating exit request
+2018-07-21 16:22:40,839 INFO supervisord started with pid 1
+2018-07-21 16:22:41,034 INFO spawned: 'queue_1' with pid 9
+2018-07-21 16:22:41,037 WARN received SIGTERM indicating exit request
+2018-07-21 16:22:41,045 CRIT unknown problem killing queue_1 (9):Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/supervisor/process.py", line 432, in kill
+    options.kill(pid, sig)
+  File "/usr/lib/python2.7/site-packages/supervisor/options.py", line 1243, in kill
+    os.kill(pid, signal)
+OSError: [Errno 3] No such process
+
+2018-07-24 13:09:38,574 INFO supervisord started with pid 1
+2018-07-24 13:09:39,579 INFO spawned: 'queue_1' with pid 8
+2018-07-24 13:09:39,968 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-24 13:09:40,972 INFO spawned: 'queue_1' with pid 9
+2018-07-24 13:09:41,245 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-24 13:09:43,251 INFO spawned: 'queue_1' with pid 10
+2018-07-24 13:09:43,544 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-24 13:09:46,550 INFO spawned: 'queue_1' with pid 11
+2018-07-24 13:09:46,980 INFO exited: queue_1 (exit status 0; not expected)
+2018-07-24 13:09:47,982 INFO gave up: queue_1 entered FATAL state, too many start retries too quickly
+2018-07-24 15:52:56,820 WARN received SIGTERM indicating exit request

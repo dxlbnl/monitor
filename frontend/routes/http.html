@@ -1,0 +1,165 @@
+<svelte:head>
+	<title>Status monitor</title>
+</svelte:head>
+
+{#await endpoints}
+  Loading...
+{:then result}
+  <section>
+    <h2>Now: {formatDateTime(time)}</h2>
+    <form on:submit="createEndpoint(event)">
+      <h3>New endpoint</h3>
+
+      <label for="name">Name</label>
+      <input type="text" id="name" bind:value=new_name />
+      
+      <label for="url">Url</label> 
+      <input type="text" id="url" bind:value=new_url />
+
+      <button type="submit">Add Endpoint</button>
+    </form>
+
+    <Table
+      sort
+      idField='name'
+      data='{result.data.status_monitor}'
+      columns='{[
+        ['name', ({ name }) => name],
+        ['url', ({ url }) => url],
+        ['past_hour', ({ uptime_past_hour }) => `${uptime_past_hour} %`],
+        ['past_day', ({ uptime_past_day }) => `${uptime_past_day} %`],
+        ['past_week', ({ uptime_past_week }) => `${uptime_past_week} %`],
+        ['past_month', ({ uptime_past_month }) => `${uptime_past_month} %`],
+        ['total', ({ uptime_total }) => `${uptime_total} %`],
+        ['last', ({ values: [last, ...rest] }) => last ? last.status_code : '?']
+      ]}'
+    />
+  </section>
+
+  <section>
+      <ul>
+        {#each result.data.status_monitor as endpoint}
+          <li>
+            {endpoint.name} (last update {lastUpdate(endpoint.last_update)})
+            <ul>
+              {#each endpoint.values as value}
+                <li>{formatDateTime(value.time)}: {value.status_code}</li>
+              {/each}
+            </ul>
+          </li>
+        {:else}
+          <li>No endpoints</li>
+        {/each}
+      </ul>
+  </section>
+{:catch error}
+  Error: {error}
+{/await}
+
+<script>
+  import { subscription, mutation, connect, refetch } from 'svelte-apollo'
+  import gql from 'graphql-tag'
+  import moment from 'moment'
+
+  moment.locale('en', {
+    relativeTime : {
+      s : (number, withoutSuffix, key, isFuture) => `${number} seconds`
+    }
+  })
+
+
+  function timeElapsed (then, now) {
+    if (Math.abs(now.diff(then)) < 1000) { // 1000 milliseconds
+        return 'just now';
+    }
+    return then.from(now)
+  }
+
+  const GET_MONITORED_ENDPOINTS = gql`subscription {
+    status_monitor {
+      name url 
+      uptime_past_hour
+      uptime_past_day
+      uptime_past_week
+      uptime_past_month
+      uptime_total
+      last_update
+      values(limit:10, order_by:time_desc) {
+        time status_code
+      }
+    }
+  }`
+
+  const ADD_ENDPOINT = gql`
+    mutation addEndpoint($name: String!, $url: String!) {
+      insert_status_monitor_config(objects:{
+        name: $name,
+        url: $url
+      }) {
+        returning {
+          name
+        }
+      }
+    }
+  `
+
+  export default {
+    components: {
+      // Icon: '../components/Icon.html',
+      Table: '../components/Table.html',
+    },
+    computed: {
+      lastUpdate: ({ time }) => (update) => timeElapsed(moment(update), time)
+    },
+    data() {
+      return {
+        endpoints: subscription(GET_MONITORED_ENDPOINTS),
+        new_name: '',
+        new_url: '',
+        time: moment()
+      }
+    },
+    helpers: {
+      formatDateTime(date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+      }
+    },
+    methods: {
+      createEndpoint: mutation(ADD_ENDPOINT, addEndpoint => function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        const { new_name: name, new_url: url } = this.get();
+        this.set({
+          new_name: '', new_url: ''
+        })
+        if (!name || !url) return;
+
+        addEndpoint({ variables: { name, url } });
+      })
+    },
+    onstate: connect,
+    oncreate () {
+      console.log("Setting timer")
+      this.timer = window.setInterval(() => {
+        this.set({
+          time: moment()
+        })
+      }, 1000)
+      // this.on('state', ({ changed, current, previous }) => {
+      //   if (changed.timeToFetch) {
+      //     if (current.timeToFetch === 0) {
+      //       const { endpoints } = this.get()
+      //       console.log("Refetching")
+      //       this.refetch(endpoints)
+      //     }
+      //   }
+      // });
+    },
+    ondestroy () {
+      window.clearInterval(this.timer)
+      console.log("Destroying")
+    }
+  }
+  
+</script>
+

@@ -10,6 +10,8 @@ RUN crontab /etc/crontab/root
 COPY check_status.sh /etc/periodic/minute/check_status
 RUN chmod a+x /etc/periodic/minute/check_status
 
+COPY sql /root/sql
+
 COPY entry.sh /root/entry.sh
 RUN chmod a+x /root/entry.sh
 

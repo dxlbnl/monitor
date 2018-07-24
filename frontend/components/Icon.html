@@ -30,7 +30,8 @@
       }
     },
     onstate ({ changed, current }) {
-      if (changed.renderedIcon) {
+      console.log("icon", changed, current)
+      if (changed.renderedIcon && current.renderedIcon) {
         const icon = this.refs.icon
         while (icon.childNodes.length) {
           icon.removeChild(icon.childNodes[0])
@@ -62,10 +63,10 @@
         switch (set) {
           case 'regular':
             return 'far'
-          case 'light':
-            return 'fal'
+            // return 'fal'
           case 'brands':
             return 'fab'
+          case 'light':
           case 'solid':
           default:
             return 'fas'

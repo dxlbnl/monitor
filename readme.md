@@ -66,3 +66,29 @@ It could dispatch a curl command to fetch a health status endpoint
 [PostgreSQL]: https://www.postgresql.org/
 [TimescaleDB]: https://github.com/timescale/timescaledb/
 [hasura]: https://hasura.io/
+
+## Flows (ideas)
+
+host:
+  description: A machine with an addressable ip?
+  dest: the identifier to resolve the host by
+  ip: resolved? (through dns)
+  checks:
+    - traceroute
+    - ping
+  resolve:
+    - domains(dns reverse lookup)
+
+domain:
+  description: A domain
+  checks:
+    - dns
+
+endpoint:
+  description: A reachable http endpoint
+  checks:
+    - http status
+      - result checker
+    - ssl check
+  resolve:
+    - host(s)(through dns, detect loadbalancer)

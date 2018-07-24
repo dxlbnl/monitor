@@ -18,13 +18,13 @@ module.exports = {
   entry: config.client.entry(),
   output: config.client.output(),
   resolve: {
-    extensions: ['.js', '.json', '.mjs', '.html'],
+    extensions: ['.js', '.json', '.mjs', '.html', '.svg'],
     mainFields: ['svelte', 'module', 'browser', 'main']
   },
   module: {
     rules: [
       {
-        test: /\.html$/,
+        test: /\.(html|svg)$/,
         use: {
           loader: 'svelte-loader',
           options: {

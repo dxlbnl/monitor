@@ -17,14 +17,14 @@ module.exports = {
   output: config.server.output(),
   target: 'node',
   resolve: {
-    extensions: ['.js', '.json', '.mjs', '.html'],
+    extensions: ['.js', '.json', '.mjs', '.html', '.svg'],
     mainFields: ['svelte', 'module', 'browser', 'main']
   },
   externals: Object.keys(pkg.dependencies).filter(name => !name.startsWith('@svelte')),
   module: {
     rules: [
       {
-        test: /\.html$/,
+        test: /\.(html|svg)$/,
         use: {
           loader: 'svelte-loader',
           options: {
